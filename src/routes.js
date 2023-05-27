@@ -51,15 +51,15 @@ export const routes = [
 
       database.insert('tasks', task);
 
-      return response.writeHead(201).end(task);
+      return response.writeHead(201).end(JSON.stringify(task));
     }
   },
   {
     method: 'PUT',
-    path: buildRoutePath('/users/:id'),
+    path: buildRoutePath('/tasks/:id'),
     handler: (request, response) => {
       const { id } = request.params;
-      const { title, description } = req.body
+      const { title, description } = request.body
 
       if (!title) {
         return request.writeHead(400).end(JSON.stringify({
@@ -78,10 +78,10 @@ export const routes = [
       const [task] = database.select('tasks', { id })
 
       if (!task) {
-        return res.writeHead(404).end({
+        return res.writeHead(404).end(JSON.stringify({
           error: 'error',
           message: 'Task not found!'
-        })
+        }))
       }
 
 
@@ -97,8 +97,8 @@ export const routes = [
   {
     method: 'PATCH',
     path: buildRoutePath('/tasks/:id/complete'),
-    handler: (req, res) => {
-      const { id } = req.params
+    handler: (request, response) => {
+      const { id } = request.params
 
       const [task] = database.select('tasks', { id })
 
@@ -114,12 +114,12 @@ export const routes = [
 
       database.update('tasks', id, { completed_at: completedAt })
 
-      return res.writeHead(204).end()
+      return response.writeHead(204).end()
     }
   },
   {
     method: 'DELETE',
-    path: buildRoutePath('/users/:id'),
+    path: buildRoutePath('/tasks/:id'),
     handler: (request, response) => {
       const { id } = req.params
 
